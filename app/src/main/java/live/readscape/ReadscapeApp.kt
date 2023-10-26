@@ -1,4 +1,4 @@
-package live.readscape.ui
+package live.readscape
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
