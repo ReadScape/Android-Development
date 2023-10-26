@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Readscape</string>
+    <string name="logo_readscape">Logo Readscape</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="log_in">Log In</string>
+    <string name="continue_with_google">Continue with google</string>
+    <string name="icon_google">Icon Google</string>
+    <string name="logo_title">Explore Boundless Worlds, One Page a Time:\nYour Gateway to Infinite Stories!</string>
 </resources>
