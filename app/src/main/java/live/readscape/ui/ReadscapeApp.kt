@@ -1,4 +1,4 @@
-package live.readscape.ui.theme
+package live.readscape.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import live.readscape.ui.screen.splash.ScreenSignUp
 import live.readscape.ui.screen.splash.ScreenSplash
 
 @Composable
@@ -20,6 +21,9 @@ fun ReadscapeApp(
     ) {
         composable("Screen Splash") {
             ScreenSplash(navController)
+        }
+        composable("Screen Sign Up") {
+            ScreenSignUp(navController)
         }
     }
 }

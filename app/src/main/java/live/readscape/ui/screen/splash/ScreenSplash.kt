@@ -23,18 +23,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import live.readscape.R
 
 @Composable
 fun ScreenSplash(
     navController: NavHostController
 ) {
-    MySplash()
+    MySplash(navController)
 }
 
 @Composable
-fun MySplash() {
-
+fun MySplash(
+    navController: NavHostController = rememberNavController()
+) {
     Box (
         contentAlignment = Alignment.Center,
         modifier = Modifier.padding(20.dp)
@@ -58,7 +60,9 @@ fun MySplash() {
             )
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = {}
+                onClick = {
+                    navController.navigate("Screen Sign Up")
+                }
             ) {
                 Text(text = stringResource(R.string.sign_up))
             }

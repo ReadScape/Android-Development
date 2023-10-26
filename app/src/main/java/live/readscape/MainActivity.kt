@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import live.readscape.ui.theme.ReadscapeApp
+import live.readscape.ui.ReadscapeApp
 import live.readscape.ui.theme.ReadscapeTheme
 
 class MainActivity : ComponentActivity() {
