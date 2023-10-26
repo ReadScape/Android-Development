@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import live.readscape.ui.screen.splash.ScreenSplash
 
 @Composable
 fun ReadscapeApp(
@@ -14,11 +15,11 @@ fun ReadscapeApp(
 ) {
     NavHost(
         navController = navController,
-        startDestination = "ScreenA",
+        startDestination = "Screen Splash",
         modifier = modifier
     ) {
-//        composable("ScreenA") {
-//            ScreenA(navController)
-//        }
+        composable("Screen Splash") {
+            ScreenSplash(navController)
+        }
     }
 }
