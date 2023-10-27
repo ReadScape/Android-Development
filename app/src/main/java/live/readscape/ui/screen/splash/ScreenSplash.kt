@@ -92,8 +92,9 @@ fun MySplash(
             }
             Button(
                 colors = ButtonDefaults.outlinedButtonColors(),
-                onClick = {}
-            ) {
+                onClick = {
+                    navController.navigate("Screen Log In")
+                }            ) {
                 Text(text = stringResource(R.string.log_in))
             }
         }
