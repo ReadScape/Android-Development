@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class AkunResponse(
 
 	@field:SerializedName("data")
-	val data: Data,
+	val data: DataAkun,
 
 	@field:SerializedName("error")
 	val error: Int,
@@ -14,7 +14,7 @@ data class AkunResponse(
 	val message: String
 )
 
-data class Data(
+data class DataAkun(
 
 	@field:SerializedName("privacy")
 	val privacy: String,
