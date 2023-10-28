@@ -3,24 +3,28 @@ package live.readscape.data.retrofit
 import live.readscape.data.response.AkunResponse
 import live.readscape.data.response.LoginResponse
 import live.readscape.data.response.SignupResponse
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.Query
 
 interface ApiService {
+
+    @FormUrlEncoded
     @POST("signup")
     suspend fun signUp(
-        @Query("username") username: String,
-        @Query("email") email: String,
-        @Query("password") password: String,
-        @Query("privacy") privacy: Boolean,
-        @Query("share") share: Boolean,
+        @Field("username") username: String,
+        @Field("email") email: String,
+        @Field("password") password: String,
+        @Field("privacy") privacy: Boolean,
+        @Field("share") share: Boolean,
     ) : SignupResponse
 
+    @FormUrlEncoded
     @POST("login")
     suspend fun login(
-        @Query("username") username: String,
-        @Query("password") password: String,
+        @Field("username") username: String,
+        @Field("password") password: String,
     ) : LoginResponse
 
     @GET("akun")
