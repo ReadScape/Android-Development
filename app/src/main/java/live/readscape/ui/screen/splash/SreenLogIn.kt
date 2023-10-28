@@ -1,5 +1,6 @@
 package live.readscape.ui.screen.splash
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,6 +36,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.runBlocking
+import live.readscape.data.retrofit.ApiConfig
 
 @Composable
 fun ScreenLogIn(
@@ -106,8 +109,8 @@ fun MyLoginContent(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyLoginForm() {
-    var userName by rememberSaveable { mutableStateOf(" ") }
-    var userPassword by rememberSaveable { mutableStateOf("") }
+    var userName by rememberSaveable { mutableStateOf("hammam") }
+    var userPassword by rememberSaveable { mutableStateOf("sfr") }
 
     Column (
         modifier = Modifier
@@ -150,13 +153,30 @@ fun MyLoginForm() {
         Button(
             modifier = Modifier
                 .fillMaxWidth(),
-            onClick = {}
+            onClick = { login(userName, userPassword) }
         ) {
             Text(text = "Login")
         }
     }
 }
 
+private fun login(
+    userName: String,
+    userPassword: String
+) {
+    runBlocking {
+        try {
+            val response =  ApiConfig.getApiService().login(userName, userPassword)
+            if( response.error == 0) {
+                Log.d("Logku", "Berhasil tersambung dan sukses login")
+            } else {
+                Log.d("Logku", "Berhasil tersambung tapi gagal login")
+            }
+        } catch (e : Exception) {
+            Log.d("Logku", "Gagal tersambung")
+        }
+    }
+}
 @Preview(showSystemUi = true)
 @Composable
 fun MyLoginPreview() {
