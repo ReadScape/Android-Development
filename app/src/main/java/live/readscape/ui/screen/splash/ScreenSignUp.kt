@@ -1,5 +1,6 @@
 package live.readscape.ui.screen.splash
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -43,6 +44,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.runBlocking
+import live.readscape.data.retrofit.ApiConfig
 
 @Composable
 fun ScreenSignUp(
@@ -101,21 +104,36 @@ fun MySignupTopbar(
 fun MySignupContent(
     pd: PaddingValues
 ) {
+    var userName by rememberSaveable { mutableStateOf("hammam") }
+    var userMail by rememberSaveable { mutableStateOf("hammam@ahqof.com") }
+    var userPassword by rememberSaveable { mutableStateOf("12345678") }
+    var privacyPolicy: Boolean by rememberSaveable { mutableStateOf(false) }
+    var shareData: Boolean by rememberSaveable { mutableStateOf(true) }
+
     Column (
         modifier = Modifier
             .padding(pd)
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ){
-        MySignupForm()
+        MySignupForm(
+            userName, userMail, userPassword,
+            onUserNameChange = { userName = it },
+            onUserMailChange = { userMail = it },
+            onUserPasswordChange = { userPassword = it },
+        )
         Spacer( modifier = Modifier.weight(1f) )
         MySpacer()
-        MySignupOption()
+        MySignupOption(
+            privacyPolicy, shareData,
+            onPrivacyPolicyChange = { privacyPolicy = it },
+            onShareDataChange = { shareData = it }
+        )
         Button(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp),
-            onClick = {}
+            onClick = { signup(userName, userMail, userPassword, privacyPolicy, shareData) }
         ) {
             Text(text = "Create account")
         }
@@ -124,10 +142,14 @@ fun MySignupContent(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MySignupForm() {
-    var userName by rememberSaveable { mutableStateOf(" ") }
-    var userMail by rememberSaveable { mutableStateOf(" ") }
-    var userPassword by rememberSaveable { mutableStateOf("") }
+fun MySignupForm(
+    userName: String,
+    userMail: String,
+    userPassword: String,
+    onUserNameChange: (String) -> Unit,
+    onUserMailChange: (String) -> Unit,
+    onUserPasswordChange: (String) -> Unit,
+) {
 
     Column (
         modifier = Modifier
@@ -142,7 +164,7 @@ fun MySignupForm() {
         )
         OutlinedTextField(
             value = userName,
-            onValueChange = { userName = it.trim() },
+            onValueChange = { onUserNameChange(it.trim()) },
             label = { Text(text = "Username") },
             modifier = Modifier
                 .padding(bottom = 20.dp)
@@ -150,7 +172,7 @@ fun MySignupForm() {
         )
         OutlinedTextField(
             value = userMail,
-            onValueChange = { userMail = it.trim() },
+            onValueChange = { onUserMailChange(it.trim()) },
             label = { Text(text = "Email Address") },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
@@ -175,7 +197,7 @@ fun MySignupForm() {
         )
         OutlinedTextField(
             value = userPassword,
-            onValueChange = { userPassword = it.trim() },
+            onValueChange = { onUserPasswordChange(it.trim()) },
             label = { Text(text = "Password") },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions.Default.copy(
@@ -204,9 +226,13 @@ fun MySignupForm() {
 }
 
 @Composable
-fun MySignupOption() {
-    var privacyPolicy: Boolean by rememberSaveable { mutableStateOf(false) }
-    var shareData: Boolean by rememberSaveable { mutableStateOf(false) }
+fun MySignupOption(
+    privacyPolicy: Boolean,
+    shareData: Boolean,
+    onPrivacyPolicyChange: (Boolean) -> Unit,
+    onShareDataChange: (Boolean) -> Unit
+) {
+
 
     Column (
         modifier = Modifier
@@ -246,7 +272,7 @@ fun MySignupOption() {
             )
             Checkbox(
                 checked = privacyPolicy,
-                onCheckedChange = { privacyPolicy = it }
+                onCheckedChange = { onPrivacyPolicyChange(it) }
             )
         }
         Row(
@@ -261,8 +287,29 @@ fun MySignupOption() {
             )
             Checkbox(
                 checked = shareData,
-                onCheckedChange = { shareData = it }
+                onCheckedChange = { onShareDataChange(it) }
             )
+        }
+    }
+}
+
+private fun signup(
+    userName: String,
+    userMail: String,
+    userPassword: String,
+    privacyPolicy: Boolean,
+    shareData: Boolean,
+) {
+    runBlocking {
+        try {
+            val response =  ApiConfig.getApiService().signUp(userName, userMail, userPassword, privacyPolicy, shareData)
+            if( response.error == 0) {
+                Log.d("Logku", "Berhasil tersambung dan sukses signup")
+            } else {
+                Log.d("Logku", "Berhasil tersambung tapi gaga; signup")
+            }
+        } catch (e : Exception) {
+            Log.d("Logku", "Gagal tersambung")
         }
     }
 }
