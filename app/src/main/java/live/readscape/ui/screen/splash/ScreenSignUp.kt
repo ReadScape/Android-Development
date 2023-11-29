@@ -1,6 +1,5 @@
 package live.readscape.ui.screen.splash
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -46,7 +45,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import live.readscape.data.response.SignupResponse
 import live.readscape.data.retrofit.ApiConfig
@@ -74,7 +72,7 @@ fun MySignup(
         content = { pd ->
             MySignupContent(
                 pd,
-                back = {
+                goBack = {
                     navController.navigateUp()
                 }
             )
@@ -112,7 +110,7 @@ fun MySignupTopbar(
 @Composable
 fun MySignupContent(
     pd: PaddingValues,
-    back: () -> Unit
+    goBack: () -> Unit
 ) {
     var userName by rememberSaveable { mutableStateOf("hammam") }
     var userMail by rememberSaveable { mutableStateOf("hammam@ahqof.com") }
@@ -165,7 +163,7 @@ fun MySignupContent(
                     onClick = {
                         showDialog = false
                         if(signupResponse.error == 0) {
-                            back()
+                            goBack()
                         }
                     }
                 ) {

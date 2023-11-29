@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import live.readscape.ui.screen.home.ScreenHome
 import live.readscape.ui.screen.splash.ScreenLogIn
 import live.readscape.ui.screen.splash.ScreenSignUp
 import live.readscape.ui.screen.splash.ScreenSplash
@@ -28,6 +29,9 @@ fun ReadscapeApp(
         }
         composable("Screen Log In") {
             ScreenLogIn(navController)
+        }
+        composable("Screen Home") {
+            ScreenHome()
         }
     }
 }

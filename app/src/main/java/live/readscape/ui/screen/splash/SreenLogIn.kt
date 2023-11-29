@@ -12,6 +12,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -23,6 +24,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -37,6 +39,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.runBlocking
+import live.readscape.data.response.DataLogin
+import live.readscape.data.response.LoginResponse
+import live.readscape.data.response.SignupResponse
 import live.readscape.data.retrofit.ApiConfig
 
 @Composable
@@ -60,7 +65,14 @@ fun MyLogin(
             )
         },
         content = { pd ->
-            MyLoginContent(pd)
+            MyLoginContent(
+                pd,
+                goHome = {
+                    navController.navigate("Screen Home") {
+                        popUpTo("Screen Splash") { inclusive = true }
+                    }
+                }
+            )
         }
     )
 }
@@ -94,7 +106,8 @@ fun MyLoginTopbar(
 
 @Composable
 fun MyLoginContent(
-    pd: PaddingValues
+    pd: PaddingValues,
+    goHome: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -102,15 +115,20 @@ fun MyLoginContent(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        MyLoginForm()
+        MyLoginForm({ goHome() })
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyLoginForm() {
+fun MyLoginForm(
+    goHome: () -> Unit
+) {
     var userName by rememberSaveable { mutableStateOf("hammam") }
     var userPassword by rememberSaveable { mutableStateOf("sfr") }
+
+    var loginResponse: LoginResponse by remember { mutableStateOf( LoginResponse(DataLogin(""),1, "tes") ) }
+    var showDialog: Boolean by rememberSaveable { mutableStateOf(false) }
 
     Column (
         modifier = Modifier
@@ -153,29 +171,48 @@ fun MyLoginForm() {
         Button(
             modifier = Modifier
                 .fillMaxWidth(),
-            onClick = { login(userName, userPassword) }
+            onClick = {
+                loginResponse = login(userName, userPassword)
+                showDialog = true
+            }
         ) {
             Text(text = "Login")
         }
+    }
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text("Login") },
+            text = { Text(loginResponse.message)},
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showDialog = false
+                        if(loginResponse.error == 0) {
+                            goHome()
+                        }
+                    }
+                ) {
+                    Text("OK")
+                }
+            }
+        )
     }
 }
 
 private fun login(
     userName: String,
     userPassword: String
-) {
-    runBlocking {
+) : LoginResponse {
+    val result: LoginResponse = runBlocking {
         try {
-            val response =  ApiConfig.getApiService().login(userName, userPassword)
-            if( response.error == 0) {
-                Log.d("Logku", "Berhasil tersambung dan sukses login")
-            } else {
-                Log.d("Logku", "Berhasil tersambung tapi gagal login")
-            }
+            ApiConfig.getApiService().login(userName, userPassword)
         } catch (e : Exception) {
-            Log.d("Logku", "Gagal tersambung")
+            LoginResponse(error = 1, message = "Gagal Koneksi", data = DataLogin(""))
         }
     }
+    return result
 }
 @Preview(showSystemUi = true)
 @Composable
