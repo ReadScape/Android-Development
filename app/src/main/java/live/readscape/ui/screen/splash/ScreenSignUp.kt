@@ -17,6 +17,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,7 +46,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import live.readscape.data.response.SignupResponse
 import live.readscape.data.retrofit.ApiConfig
 
 @Composable
@@ -68,7 +72,12 @@ fun MySignup(
             )
         },
         content = { pd ->
-            MySignupContent(pd)
+            MySignupContent(
+                pd,
+                back = {
+                    navController.navigateUp()
+                }
+            )
         }
     )
 }
@@ -102,13 +111,17 @@ fun MySignupTopbar(
 
 @Composable
 fun MySignupContent(
-    pd: PaddingValues
+    pd: PaddingValues,
+    back: () -> Unit
 ) {
     var userName by rememberSaveable { mutableStateOf("hammam") }
     var userMail by rememberSaveable { mutableStateOf("hammam@ahqof.com") }
     var userPassword by rememberSaveable { mutableStateOf("12345678") }
     var privacyPolicy: Boolean by rememberSaveable { mutableStateOf(false) }
     var shareData: Boolean by rememberSaveable { mutableStateOf(true) }
+
+    var signupResponse: SignupResponse by remember { mutableStateOf( SignupResponse(1,"tes") ) }
+    var showDialog: Boolean by rememberSaveable { mutableStateOf(false) }
 
     Column (
         modifier = Modifier
@@ -133,10 +146,33 @@ fun MySignupContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp),
-            onClick = { signup(userName, userMail, userPassword, privacyPolicy, shareData) }
+            onClick = {
+                signupResponse = signup(userName, userMail, userPassword, privacyPolicy, shareData)
+                showDialog = true
+            }
         ) {
             Text(text = "Create account")
         }
+    }
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text("Signup") },
+            text = { Text(signupResponse.message)},
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showDialog = false
+                        if(signupResponse.error == 0) {
+                            back()
+                        }
+                    }
+                ) {
+                    Text("OK")
+                }
+            }
+        )
     }
 }
 
@@ -299,19 +335,16 @@ private fun signup(
     userPassword: String,
     privacyPolicy: Boolean,
     shareData: Boolean,
-) {
-    runBlocking {
+) : SignupResponse {
+    val result: SignupResponse = runBlocking {
         try {
-            val response =  ApiConfig.getApiService().signUp(userName, userMail, userPassword, privacyPolicy, shareData)
-            if( response.error == 0) {
-                Log.d("Logku", "Berhasil tersambung dan sukses signup")
-            } else {
-                Log.d("Logku", "Berhasil tersambung tapi gaga; signup")
-            }
+//            delay(10000)
+            ApiConfig.getApiService().signUp(userName, userMail, userPassword, privacyPolicy, shareData)
         } catch (e : Exception) {
-            Log.d("Logku", "Gagal tersambung")
+            SignupResponse(1, "Gagal koneski")
         }
     }
+    return result
 }
 
 @Composable
