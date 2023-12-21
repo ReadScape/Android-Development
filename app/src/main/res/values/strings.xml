@@ -6,4 +6,9 @@
     <string name="continue_with_google">Continue with google</string>
     <string name="icon_google">Icon Google</string>
     <string name="logo_title">Explore Boundless Worlds, One Page a Time:\nYour Gateway to Infinite Stories!</string>
+    <string name="menu_favorite">Bookmark</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_profile">Profile</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_feed">Feed</string>
 </resources>
