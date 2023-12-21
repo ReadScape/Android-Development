@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -45,6 +46,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import live.readscape.BottomBar
 import live.readscape.R
 import org.w3c.dom.Comment
@@ -55,13 +58,13 @@ fun ScreenFeed(navController: NavController) {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        MyFeed()
+        MyFeed(navController)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyFeed() {
+fun MyFeed(navController: NavController) {
     Scaffold(bottomBar = { BottomBar() }) { innerPadding ->
         LazyColumn(
             modifier = Modifier.padding(innerPadding), verticalArrangement = Arrangement.Center,
@@ -99,11 +102,9 @@ fun MyFeed() {
                             spotColor = Color(0x40000000),
                             ambientColor = Color(0x40000000)
                         )
-                        .fillMaxWidth()
                         .fillMaxHeight()
                         .background(
                             color = Color(0xFFFFFFFF),
-                            shape = RoundedCornerShape(size = 15.dp)
                         )
                 ) {
                     Row(
@@ -178,12 +179,12 @@ fun MyFeed() {
                                     3.dp, alignment = Alignment.CenterHorizontally
                                 )
                             ) {
-                                Row(modifier = Modifier.clickable {  }) {
+                                Row(modifier = Modifier.clickable { }) {
                                     Icon(Icons.Default.FavoriteBorder, contentDescription = "like")
                                     Text(text = "Like")
                                 }
 
-                                Row(modifier = Modifier.clickable {  }) {
+                                Row(modifier = Modifier.clickable { }) {
                                     Icon(
                                         painter = painterResource(R.drawable.chat_buble),
                                         contentDescription = "Comment"
@@ -191,7 +192,7 @@ fun MyFeed() {
                                     Text(text = "Comment")
                                 }
 
-                                Row(modifier = Modifier.clickable {  }) {
+                                Row(modifier = Modifier.clickable { }) {
                                     Icon(
                                         painter = painterResource(R.drawable.ios_share),
                                         contentDescription = "Share"
@@ -216,21 +217,25 @@ fun MyFeed() {
 @Composable
 fun CommentSection() {
     var comment by rememberSaveable { mutableStateOf("spontan") }
-    CommentForm(comment, onCommentChange = {comment = it}) {
+    CommentForm(comment, onCommentChange = { comment = it }) {
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentForm(comment: String, onCommentChange: (String) -> Unit, onClick: () -> Unit) {
-    Row {
+    Row(modifier = Modifier.padding(horizontal = 20.dp, vertical = 15.dp)) {
         OutlinedTextField(
+            modifier = Modifier
+                .height(58.dp)
+                .width(300.dp),
             value = comment,
             onValueChange = onCommentChange,
             label = { Text(text = "Comment") },
+            shape = RoundedCornerShape(50.dp)
         )
 
-        IconButton(onClick = {}) {
+        IconButton(modifier = Modifier.offset(y = 10.dp), onClick = {}) {
             Icon(
                 painter = painterResource(R.drawable.send),
                 contentDescription = "Send",
@@ -243,5 +248,5 @@ fun CommentForm(comment: String, onCommentChange: (String) -> Unit, onClick: () 
 @Preview(showSystemUi = true)
 @Composable
 fun CircleRowPreview() {
-    MyFeed()
+    MyFeed(navController = rememberNavController())
 }
