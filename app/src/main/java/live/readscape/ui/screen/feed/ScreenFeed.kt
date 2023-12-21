@@ -50,7 +50,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import live.readscape.BottomBar
 import live.readscape.R
-import org.w3c.dom.Comment
 
 @Composable
 fun ScreenFeed(navController: NavController) {
