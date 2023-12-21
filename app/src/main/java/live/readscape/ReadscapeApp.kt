@@ -35,7 +35,7 @@ fun ReadscapeApp(
             ScreenHome(navController)
         }
         composable("Screen Feed") {
-            ScreenFeed()
+            ScreenFeed(navController)
         }
     }
 }
