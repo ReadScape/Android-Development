@@ -38,13 +38,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import live.readscape.BottomBar
 import live.readscape.R
 
 @Composable
 fun ScreenHome(
-    onNavigateToStory: () -> Unit
+    onNavigateToStory: () -> Unit,
+    onNavigateToDetail: (id: Int) -> Unit
 ) {
 
     Box(
@@ -52,7 +52,8 @@ fun ScreenHome(
         contentAlignment = Alignment.Center
     ) {
         HorizontalGrid(
-            onNavigateToStory
+            onNavigateToStory,
+            onNavigateToDetail
         )
     }
 }
@@ -62,7 +63,8 @@ fun ScreenHome(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HorizontalGrid(
-    onNavigateToStory: () -> Unit
+    onNavigateToStory: () -> Unit,
+    onNavigateToDetail: (id: Int) -> Unit
 ) {
     val category = listOf("All", "Mystery", "Travel", "Adventure", "Fan Fiction")
     Scaffold(
@@ -104,6 +106,7 @@ fun HorizontalGrid(
                         Modifier
                             .width(125.dp)
                             .fillMaxHeight()
+                            .clickable { onNavigateToDetail(it) }
                     ) {
                         Image(
                             modifier = Modifier
@@ -186,6 +189,7 @@ fun HorizontalGrid(
                         Modifier
                             .width(125.dp)
                             .fillMaxHeight()
+                            .clickable { onNavigateToDetail(it) }
                     ) {
                         Image(
                             modifier = Modifier
@@ -230,5 +234,5 @@ fun HorizontalGrid(
 @Preview(showSystemUi = true)
 @Composable
 fun MyHorizontalGridPreview() {
-    HorizontalGrid(onNavigateToStory = {})
+    HorizontalGrid(onNavigateToStory = {}, onNavigateToDetail = {})
 }
