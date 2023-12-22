@@ -11,6 +11,7 @@ import live.readscape.ui.screen.home.ScreenHome
 import live.readscape.ui.screen.splash.ScreenLogIn
 import live.readscape.ui.screen.splash.ScreenSignUp
 import live.readscape.ui.screen.splash.ScreenSplash
+import live.readscape.ui.screen.story.ScreenStory
 
 @Composable
 fun ReadscapeApp(
@@ -32,10 +33,17 @@ fun ReadscapeApp(
             ScreenLogIn(navController)
         }
         composable("Screen Home") {
-            ScreenHome(navController)
+            ScreenHome(
+                onNavigateToStory = {
+                    navController.navigate("Screen Story")
+                }
+            )
         }
         composable("Screen Feed") {
             ScreenFeed(navController)
+        }
+        composable("Screen Story") {
+            ScreenStory()
         }
     }
 }

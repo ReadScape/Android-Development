@@ -44,14 +44,16 @@ import live.readscape.R
 
 @Composable
 fun ScreenHome(
-    navController: NavController
+    onNavigateToStory: () -> Unit
 ) {
 
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        HorizontalGrid()
+        HorizontalGrid(
+            onNavigateToStory
+        )
     }
 }
 
@@ -59,13 +61,16 @@ fun ScreenHome(
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HorizontalGrid() {
+fun HorizontalGrid(
+    onNavigateToStory: () -> Unit
+) {
     val category = listOf("All", "Mystery", "Travel", "Adventure", "Fan Fiction")
     Scaffold(
         bottomBar = { BottomBar() },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
+                    onNavigateToStory()
                 }
             ) {
                 Icon(
@@ -225,5 +230,5 @@ fun HorizontalGrid() {
 @Preview(showSystemUi = true)
 @Composable
 fun MyHorizontalGridPreview() {
-    HorizontalGrid()
+    HorizontalGrid(onNavigateToStory = {})
 }
